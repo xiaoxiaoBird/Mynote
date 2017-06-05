@@ -1,0 +1,32 @@
+.k-menu .k-item, .k-widget.k-menu-horizontal > .k-item {
+    float: right !important;
+    min-width: 95px;
+    height: 35px;
+    background: url(../images/menu/item-bg.png) 0 -35px;
+}
+
+.k-menu .k-item.k-state-hover, .k-menu .k-item.k-state-focused {
+    background-position: 0 0;
+}
+
+.k-menu .k-item > span {
+    text-align: center;
+    line-height: 22px;
+    height: 22px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.3em;
+    padding: 5 !important;
+}
+
+.k-menu.k-widget {
+    border: none !important;
+}
+
+.k-menu:after {
+    content: none !important;
+}
+
+.pointer {
+	cursor: pointer;
+}

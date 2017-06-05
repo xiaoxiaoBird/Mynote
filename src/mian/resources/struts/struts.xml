@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="false"/>
+    <!-- 接收编码格式 -->
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+    <!--<constant name="struts.objectFactory" value="spring"></constant>-->
+    <!--<constant name="framework.id.field.name" value="id" />-->
+    <!--<constant name="framework.deleted.id.param.name" value="deletedId" />-->
+    <!--<constant name="framework.separator.name" value="," />-->
+    <!--<constant name="framework.stacktrace.name" value="stacktrace" />-->
+    <!--<constant name="framework.page.name" value="page" />-->
+    <!--<constant name="framework.pageSize.param.name" value="pageSize" />-->
+    <!--<constant name="framework.default.pageSize" value="10" />-->
+    <!--<constant name="framework.success.name" value="success" />-->
+    <!--<constant name="framework.msg.name" value="msg" />-->
+    <!--<constant name="framework.orderby.param.name" value="sort" />-->
+    <!--<constant name="framework.direction.param.name" value="dir" />-->
+
+    <package name="license" extends="struts-default" namespace="/system">
+        <action name="LicenseInfo" class="com.harmonywisdom.framework.action.LicenseInfoAction" method="getInfo"/>
+    </package>
+
+    <package name="demo" extends="struts-default" namespace="/demo">
+        <action name="S_*" class="com.harmonywisdom.ajproduct.demo.action.DemoAction" method="{1}"/>
+    </package>
+
+     <package name="ajproduct" namespace="/action" extends="struts-default">
+        <action name="S_*_*_*" class="com.harmonywisdom.ajproduct.{1}.action.{2}Action" method="{3}"/>
+    </package> 
+
+	
+    
+    <!--登入-->
+    <package name="companyLogin" namespace="/login" extends="struts-default">
+        <action name="*" class="com.harmonywisdom.ajproduct.company.action.LoginAction" method="{1}">
+            <result name="change_pwd">/login/change_pwd.jsp</result>
+        </action>
+        <action name="regist" class="com.harmonywisdom.ajproduct.company.action.CompanyInfoAction" method="regist">
+        </action>
+    </package>
+
+	<!-- 字典 -->
+	<package name="dict" namespace="" extends="struts-default">
+        <action name="S_dict_Dict_*" class="com.harmonywisdom.ajproduct.dict.action.DictAction" method="{1}"/>
+    </package>
+
+    <include file="struts/*.xml"/>
+</struts>

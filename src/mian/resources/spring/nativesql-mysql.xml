@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:map id="nativeSQLMap" value-type="java.lang.String">
+        <entry key="dbType">
+            <value>mysql</value>
+        </entry>
+
+
+
+
+        <entry key="DailyService.findByListPage#query">
+            <value><![CDATA[
+                  select  d.id as did,d.companyId,d.org_change_id,d.org_name,d.fill_people,d.created,d.new_amount,
+                  d.consumption, d.stock,d.storage_amount,d.output_amount,d.inventory,d.unit_of_measurement,d.review_status,
+                  d.reviewer,d.reviewed,d.audit_opinion,d.fill_people_tel,d.chemical_id ,  
+                  t.id as tid,t.comcode as tcode,t.chemicals_type,t.chemicals_nanme,t.chemicals_cnanme, 
+                  t.cas_num,t.un_num,t.imdg_num,t.register_num,t.register_date,t.is_identify,t.is_toxic,t.register_type,
+                  c.comcode as ccode,c.com_name,c.county,d.cityId,d.districtId,d.streetId,d.chemical_name  
+                  from HW_COMPANY_CHEMICALS t  inner join HW_COMPANY_INFO c on  c.comcode = t.comcode   
+                  inner join HW_DAILY d  on d.companyId = c.comcode and d.chemical_id=t.id where 1=1
+            ]]></value>
+        </entry>
+
+    </util:map>
+</beans>

@@ -1,0 +1,4 @@
+.map-toolbar{position:absolute;background-image: url("../images/toolbar_back.png");background-repeat:no-repeat;width:24px;height: 137px;padding-top: 6px;}
+.map-toolbar img{cursor: pointer;margin-left: 1px;}
+.map-toolbar div{height: 4px;height/*\**/: 2px \9;border-top: 2px dotted white; width: 16px; margin-left: 4px;}
+.map-toolbar img.current{border:1px solid #66CCFF}

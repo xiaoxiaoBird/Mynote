@@ -1,0 +1,100 @@
+/** �ش������ϱ� */
+textarea[name='auditOpinion'] {
+	height: 50px !important;
+}
+textarea[name='basicSituation'] {
+	height: 50px !important;
+}
+
+textarea[name='detailsReason'] {
+	height: 50px !important;
+	width: 250px !important;
+}
+textarea[name='law'] {
+	height: 50px !important;
+	width: 250px !important;
+}
+textarea[name='rangeConsequence'] {
+	height: 50px !important;
+	width: 250px !important;
+}
+textarea[name='governance'] {
+	height: 50px !important;
+	width: 250px !important;
+}
+textarea[name='describe'] {
+	height: 100px !important;
+	width: 500px !important;
+}
+textarea[name='domain'] {
+	height: 100px !important;
+	width: 500px !important;
+}
+textarea[name='experience'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='disposalSituation'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='cause'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='rangeArea'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='assetLoss'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='personLoss'] {
+	height: 60px !important;
+	width: 500px !important;
+}
+textarea[name='rationalSubstance'] {
+	height: 60px !important;
+	width: 500px !important;
+}
+textarea[name='explosionExplain'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='packageStoreage'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='virulenceExplain'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='emergency'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='protection'] {
+	height: 60px !important;
+	width: 500px !important;
+}textarea[name='leakageDisposal'] {
+	height: 60px !important;
+	width: 500px !important;
+}
+textarea[name='planContent'] {
+	height: 150px !important;
+	width: 350px !important;
+}
+
+textarea[name='cultivateRange'] {
+	height: 200px !important;
+}
+
+textarea[name='remark'] {
+	height: 80px !important;
+	width: 650px !important;
+}
+textarea[name='summary'] {
+	height: 80px !important;
+	width: 650px !important;
+}
+textarea[name='content'] {
+	height: 80px !important;
+	width: 650px !important;
+}
+textarea[name='noticeContent'] {
+	height: 100px !important;
+	width: 600px !important;
+}
+

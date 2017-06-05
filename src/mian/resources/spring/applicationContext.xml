@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+       default-autowire="byName">
+    <!-- 以下为市级端的配置 -->
+    <context:property-placeholder properties-ref="jdbc" />
+    <util:properties id="jdbc" location="classpath:META-INF/jdbc.properties"/>
+
+    <context:component-scan base-package="com.harmonywisdom"/>
+    <!--<context:component-scan base-package="com.harmonywisdom"
+                            use-default-filters="false"
+                            name-generator="com.harmonywisdom.framework.service.CustomNameGenerator">
+        <context:include-filter type="annotation"
+                                expression="com.harmonywisdom.framework.service.annotation.Remotable"/>
+    </context:component-scan>-->
+
+
+
+    <bean class="com.harmonywisdom.framework.service.SpringUtil"/>
+    <bean class="com.harmonywisdom.ajproduct.common.dict.DictUtil"/>
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" lazy-init="false" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
+        <property name="minPoolSize" value="${jdbc.minPoolSize}"/>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}" />
+        <property name="acquireIncrement" value="${jdbc.acquireIncrement}" />
+
+        <property name="maxIdleTime" value="${jdbc.maxIdleTime}" />
+        <property name="maxConnectionAge" value="${jdbc.maxConnectionAge}" />
+
+        <property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}" />
+        <property name="testConnectionOnCheckin" value="${jdbc.testConnectionOnCheckin}" />
+        <property name="testConnectionOnCheckout" value="${jdbc.testConnectionOnCheckout}" />
+        <!-- 驱动不支持isValid方法时使用下面的配置 -->
+        <!--<property name="preferredTestQuery" value="${jdbc.preferredTestQuery}" />-->
+
+        <property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
+        <property name="acquireRetryDelay" value="${jdbc.acquireRetryDelay}" />
+        <property name="breakAfterAcquireFailure" value="false" />
+        <property name="checkoutTimeout" value="${jdbc.checkoutTimeout}" />
+
+        <property name="maxStatements" value="${jdbc.maxStatements}" />
+        <property name="maxStatementsPerConnection" value="0" />
+        <property name="numHelperThreads" value="10" />
+
+        <!-- 检查连接泄露时使用 -->
+        <!--
+        <property name="debugUnreturnedConnectionStackTraces" value="true" />
+        <property name="unreturnedConnectionTimeout" value="30" />
+        -->
+    </bean>
+
+    <bean id="mergingPersistenceUnitPostProcessor"  class="com.harmonywisdom.framework.dao.MergingPersistenceUnitPostProcessor">
+        <property name="persistenceUnitName" value="jhajproduct"/>
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="persistenceXmlLocation" value="classpath*:META-INF/persistence*.xml"/>
+        <property name="persistenceUnitName" value="jhajproduct"/>
+        <property name="persistenceUnitPostProcessors" ref="mergingPersistenceUnitPostProcessor"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="${jdbc.showsql}"/>
+                <property name="generateDdl" value="true"/>
+                <property name="databasePlatform" value="${jdbc.type}"/>
+            </bean>
+        </property>
+        <!--<property name="jpaProperties">-->
+            <!--<props>-->
+                <!--<prop key="hibernate.default_schema">${jdbc.username}</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    </bean>
+
+    <!--<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="false"/>-->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" lazy-init="false">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <aop:config proxy-target-class="true">
+        <aop:advisor pointcut="execution(* com.harmonywisdom..service..*Service*.*(..))" advice-ref="txAdvice"/>
+    </aop:config>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="load*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="*" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--<import resource="classpath*:spring/context-ajproduct-*.xml"/>-->
+
+    <!--修改数据库时修改此处-->
+   <!-- <import resource="classpath*:spring/nativesql-oracle.xml"/>-->
+    <import resource="classpath*:spring/nativesql-mysql.xml"/>
+    <!-- <import resource="classpath*:spring/quartz-cron.xml"/>
+
+</beans>

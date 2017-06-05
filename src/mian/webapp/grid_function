@@ -1,0 +1,220 @@
+ //表格中某(特定样式)元素的(指定事件)的触发功能,
+  grid.element.on(A,B,function(e){
+       ..
+     });
+ A为事件:click,dbclick...
+ B为样式
+ function:完成指定功能
+
+ example:
+ //k-view样式的元素点击事件:为该行的双击事件
+ grid.element.on('click','.k-view',function(e){
+         $(e.currentTarget).parents("tr").dblclick();
+     });
+***************************************************
+//当发生这些事件时,完成特定功能(赋值..)
+grid.on(A,function(e){
+    ..
+})
+ A为公司框架事件:save,edit,dataBinding,'editDialog:open',dataBound
+
+example:
+//查看汇报时将未上报的去掉
+    grid.on('dataBinding', function(e) {
+
+    });
+
+**************************************
+//当完成这些事件,执行特定功能
+grid.after(A,function(e){
+    ..
+})
+_____________________________________________________________________________________________________________
+
+
+var  optionModel =  grid.dataItem(grid.select());
+ optionModel.set("confirm","1")
+ 改变列表的行的视图行为
+
+事件发生时会用到的方法
+//点击或双击选定的目标
+ $(e.currentTarget)
+
+//表格查看弹框的元素选定: （表格弹框出现）  grid.on('editDialog:open', function(e) {});
+  this.editDialog.element.find("[for='undefined']")
+  this.editDialog.element.find("[for='某字段名']")
+
+//表格的刷新功能:
+1. grid.dataSource.query()
+2.$(".k-pager-refresh").click();     //表格的刷新按钮
+3.grid.dataSource.read()
+
+//编辑指定行(修改按钮)
+grid.editRow(tr),
+grid.select($(e.currentTarget).closest("tr"))；
+$(".k-grid-edit").click()；
+
+//指定行的某个字段改变
+grid.dataSource.get("id").set("字段",值) --id为记录的id字段(即主键)
+grid.dataSource.getByUid() --Uid表示为grid的行id
+grid.dataSource.at(index) ---的第几条信息
+
+//取消双击事件
+grid.bind('dblclick', function(e) {
+        e.preventDefault(); //禁止编辑,只能查看
+        //e.rowData.editable = false; //禁止编辑,只能查看
+    });
+_______________________________________________________________________________________________________________
+ editor（）函数:
+//编辑areatext类型宽高
+    function createTextArea(container, options,style){
+        var textarea = '<textarea class="k-textarea k-textbox" data-bind="value:'+options.field+'" name="'+options.field+'" stringmaxlength="1000" style="'+style+'"/>';
+        container.append(textarea);
+    };
+//编辑input类型验证型
+    function createInput(container, options,style,stringmaxlength,validate){
+            if(validate){
+                var input = '<input class="k-input k-textbox" stringmaxlength="'+stringmaxlength+'" '+validate+' data-bind="value:'+options.field+'" name="'+options.field+'" style="'+style+'"/>';
+            }else{
+                var input = '<input class="k-input k-textbox" stringmaxlength="'+stringmaxlength+'"  data-bind="value:'+options.field+'" name="'+options.field+'" style="'+style+'"/>';
+            }
+
+            container.append(input);
+        }
+
+ function dropList(container, options, dictionary) {
+         if (dictionary[0].name != '请选择...') {
+             dictionary.unshift({'code':'','name':'请选择...'});
+         }
+        //创建一个下拉框
+        $('<input data-bind="value:' + options.field + '"/>')
+            .appendTo(container).hwuiDropDownList({
+                dataTextField: "name",
+                dataValueField: "code",
+                dataSource: dictionary,
+                index: 0,
+                valuePrimitive:true
+            });
+    }
+
+     //创建一个数字框
+    function makeNumber(container, options) {
+    		var number =  $('<input type="text"/>').appendTo(container).hwuiNumericTextBox({
+    			max:10,
+    			min:-10,
+    			value:2,
+    			name :options.field
+    		});
+    		$(number).attr("data-bind","value:"+options.field);
+    		$("<span " + core.attr("for") + '="' + options.field + '" class="k-invalid-msg"/>').hide().appendTo(container);
+    	}
+
+
+    function createDateTimePicker(container, options) {
+        // 创建一个时间控件
+        var selectTime = $('<input data-bind="value:' + options.field + '"/>')
+            .appendTo(container).hwuiDateTimePicker({
+                topable: true
+            }).data('hwuiDateTimePicker');
+    }
+
+    function selectComp(container, options) {
+                //创建输入框与及选择输入按钮
+                $('<input data-bind="value: comName" class="k-textbox" id="roleName" style="width:50%" readOnly="readOnly">').appendTo(container);
+                htm = '<a class="k-button k-button-icontext k-grid-plan" href="#"><span class=" "></span>选择企业</a>';
+                $(htm).appendTo(container).bind("click", function (e) {
+                //...为按钮绑定事件
+                }
+
+    }
+
+    //创建文件上传   也可以在jsp页面上增加container的div可以增加
+        function createUpload(container, options,type) {
+            var businessId = options.model.id;
+            //创建附件上传控件
+            $('<input name="' + options.field + '" id="' + options.field + '" type="hidden" />').appendTo(container);
+            var removeIds = $('<input name="removeId"  data-bind="value:removeId" type="hidden" value="">').appendTo(container);
+            $('<input name="files" id="' + options.field + '_att" type="file" />')
+                .appendTo(container).hwuiAttachment({
+                    hiddenInputEl: '#' + options.field,
+                    businessId: businessId,//附件加载
+                    maxFileCount: "5",
+                    type:type,
+                    removeId: removeIds,
+                    model: options.model,
+                    supportsRemove: true//附件删除
+                });
+        }
+
+
+————————————————————————————————————————————————————————————————————————————
+ template:
+
+ /**
+     * 附件查看
+     * @param businessId
+     * @returns {string}
+     */
+    function viewAttrHandle(businessId,type) {
+        var loadAttrUrl = rootPath + '/action/S_attachment_Attachment_listAttachment.action';
+        var htmlStr = '无附件';
+        $.ajax({
+            type: "POST",
+            url: loadAttrUrl,
+            data: {"businessId": businessId,attachmentType:type},
+            cache: false,
+            async: false,
+            dataType: "json",
+            success: function (files) {
+                if (files.length > 0) {
+                    htmlStr = '<ul class="k-upload-files k-reset" style="border:1px solid #c5c5c5;" >';
+                    $.each(files, function (i, file) {
+                        var downloadUrl = rootPath + "/action/S_attachment_Attachment_download.action?id=" + file.id;
+                        htmlStr += '<li class="k-file k-file-success">';
+                        htmlStr += '<span class="k-progress" style="width: 100%;"></span>';
+                        htmlStr += '<span class="k-icon k-i-mage/jpeg"></span>';
+                        htmlStr += '<a href=' + downloadUrl + ' title="下载  ' + file.name + '" class="k-filename" style="max-width:400px;"> 下载  ' + file.name + '</a>';
+                        htmlStr += '</li>';
+                    });
+                    htmlStr += "</ul>";
+                }
+            }
+        });
+        return htmlStr;
+    }
+
+    //返回数据格式化
+    function(data){
+                    return hwui.toString(data.selectTime,"yyyy-MM-dd HH:mm:ss");
+                }
+
+    //字典码
+    function(data){
+    var code = data.checkContext;
+                var temp = {"checkContext": dictionary1};
+                return dict.getDctionnaryName(temp, "checkContext", code);
+    }
+
+
+
+______________________________________________________________________________________________________________
+new Date().format('yyyy-MM-dd');
+Date.prototype.format = function(fmt)
+{ //author: meizz
+    var o = {
+        "M+" : this.getMonth()+1,                 //月份
+        "d+" : this.getDate(),                    //日
+        "h+" : this.getHours(),                   //小时
+        "m+" : this.getMinutes(),                 //分
+        "s+" : this.getSeconds(),                 //秒
+        "q+" : Math.floor((this.getMonth()+3)/3), //季度
+        "S"  : this.getMilliseconds()             //毫秒
+    };
+    if(/(y+)/.test(fmt))
+        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    for(var k in o)
+        if(new RegExp("("+ k +")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+    return fmt;
+}
+

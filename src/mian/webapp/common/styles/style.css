@@ -1,0 +1,11 @@
+body{
+	margin: 0px;
+	padding: 0px;
+}
+/*选择人员窗口tree节点样式*/
+.org {
+	background: url(../images/group.png) 0 0px;
+}
+.person {
+	background: url(../images/folder_user.png) 0 0px;
+}

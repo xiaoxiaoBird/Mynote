@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><MobileNet><page name="list.jsp"><method>get</method><display>list撒旦发放</display><request_param>request_param1|request_param2</request_param></page><page name="content.jsp"><method>post</method><display>content</display><url_title>title,publisher,published_calendar</url_title></page></MobileNet>
